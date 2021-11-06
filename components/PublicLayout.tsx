@@ -1,9 +1,11 @@
-import Sidebar from '@components/Sidebar';
+import Navbar from '@components/Navbar';
+import Footer from '@components/Footer';
 
 const PublicLayout = ({ children }) => (
   <div>
-    <Sidebar />
+    <Navbar />
     {children}
+    <Footer />
   </div>
 );
 

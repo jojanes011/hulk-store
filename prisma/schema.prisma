@@ -21,6 +21,12 @@ enum Enum_RoleName {
   admin
 }
 
+enum Enum_PaymentType {
+  Efectivo
+  Credito
+  Debito
+}
+
 model Account {
   id                 String  @id @default(cuid())
   userId             String
@@ -42,12 +48,51 @@ model Account {
   @@unique([provider, providerAccountId])
 }
 
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+model Category {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  user            User        @relation(fields: [userId], references: [id])
+  userId          String
+  payment         Payment     @relation(fields: [paymentId], references: [id])
+  paymentId       String
+  deliveryDate    DateTime
+  delivered       Boolean     @default(false)
+  deliveryAddress String
+  notes           String?     @db.VarChar(500)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  orderLines      OrderLine[]
+}
+
+model OrderLine {
+  id        String   @id @default(cuid())
+  amount    Int
+  comments  String   @db.VarChar(500)
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Product   Product  @relation(fields: [productId], references: [id])
+  productId String
+}
+
+model Payment {
+  id          String           @id @default(cuid())
+  paymentType Enum_PaymentType
+  subtotal    Float
+  tax         Float
+  total       Float
+  confirmed   Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  orders      Order[]
 }
 
 model Page {
@@ -58,6 +103,19 @@ model Page {
   roles     Role[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id          String      @id @default(cuid())
+  name        String
+  description String      @db.VarChar(500)
+  imagePath   String?      @db.VarChar(500)
+  price       Float
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  Category    Category    @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  orderLines  OrderLine[]
 }
 
 model Profile {
@@ -80,6 +138,14 @@ model Role {
   updatedAt DateTime      @updatedAt
 }
 
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -93,6 +159,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   roles         Role[]
+  Order         Order[]
 }
 
 model VerificationToken {

@@ -2,3 +2,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.padding-screen {
+  @apply px-4 lg:px-16 xl:px-40;
+}

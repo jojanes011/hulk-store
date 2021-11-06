@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { ToastContext } from 'context/toast';
 import { ToastContainer, toast } from 'react-toastify';
-import Sidebar from '@components/Sidebar';
+import Navbar from '@components/Navbar';
 import 'react-toastify/dist/ReactToastify.css';
+import Footer from '@components/Footer';
 
 const Layout = ({ children }) => {
   const [toastState, setToastState] = useState({
@@ -27,11 +28,14 @@ const Layout = ({ children }) => {
     <ToastContext.Provider value={{ setToastState }}>
       <div>
         <div>
-          <Sidebar />
+          <Navbar />
         </div>
         <div>
           {children}
           <ToastContainer />
+        </div>
+        <div>
+          <Footer />
         </div>
       </div>
     </ToastContext.Provider>
