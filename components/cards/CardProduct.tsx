@@ -1,39 +1,51 @@
+import { CartContext } from 'context/cart';
 import Image from 'next/image';
+import { useContext } from 'react';
 import NumberFormat from 'react-number-format';
 
 interface CardProductInterface {
-  name: string;
-  price: number;
-  image?: string;
+  product: any;
   classNameCard?: string;
 }
 
 const CardProduct = ({
-  name = '',
-  image = null,
-  price = 0,
+  product = {},
   classNameCard = '',
-}: CardProductInterface) => (
-  <div
-    className={`${classNameCard} flex flex-col p-2 shadow-xl border border-black rounded-md`}
-  >
-    <div className='relative h-44 w-full'>
-      <Image src={image ?? '/img/defaultImage.jpg'} layout='fill' />
+}: CardProductInterface) => {
+  const { addToCart } = useContext(CartContext);
+
+  return (
+    <div
+      className={`${classNameCard} flex flex-col filter drop-shadow-lg bg-white border border-opacity-70 rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110`}
+    >
+      <div className='relative h-44 w-full'>
+        <Image
+          src={product?.imagePath ?? '/img/defaultImage.jpg'}
+          layout='fill'
+        />
+      </div>
+      <div className='break-words font-bold text-gray-700 px-2'>
+        <h2>{product?.name}</h2>
+      </div>
+      <div className='break-words font-extrabold text-lg px-2'>
+        <NumberFormat
+          value={product?.price}
+          className='foo'
+          displayType='text'
+          thousandSeparator
+          prefix='$'
+          renderText={(value) => <div>{value}</div>}
+        />
+      </div>
+      <button
+        onClick={() => addToCart(product)}
+        className='p-2 w-full bg-primary text-white rounded-br-md rounded-bl-md hover:bg-black font-semibold'
+        type='button'
+      >
+        Comprar
+      </button>
     </div>
-    <div className='break-words font-bold text-gray-800'>
-      <h2>{name}</h2>
-    </div>
-    <div className='break-words font-extrabold text-lg'>
-      <NumberFormat
-        value={price}
-        className='foo'
-        displayType='text'
-        thousandSeparator
-        prefix='$'
-        renderText={(value) => <div>{value}</div>}
-      />
-    </div>
-  </div>
-);
+  );
+};
 
 export default CardProduct;

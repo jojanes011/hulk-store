@@ -1,7 +1,13 @@
 import React from 'react';
 
-const Search = () => (
-  <div className='flex flex-row items-center rounded-md w-full'>
+interface SearchInterface {
+  classNameContainer?: string;
+}
+
+const Search = ({ classNameContainer = '' }: SearchInterface) => (
+  <div
+    className={`flex flex-row items-center rounded-md ${classNameContainer}`}
+  >
     <div className='hidden md:block rounded-l-md p-2 border bg-inputSearch'>
       <i className='fas fa-search text-text' />
     </div>

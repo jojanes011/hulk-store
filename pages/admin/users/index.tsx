@@ -8,6 +8,6 @@ export async function getServerSideProps(context) {
   };
 }
 
-const LandingAdmin = () => <div>LandingAdmin</div>;
+const Users = () => <div>Users</div>;
 
-export default LandingAdmin;
+export default Users;

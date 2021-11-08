@@ -13,22 +13,6 @@ const nextOptions = {
       }
       return true;
     },
-    // async session(session) {
-    //   const newSession = (await prisma.session.findFirst({
-    //     where: {
-    //       accessToken: session.accessToken,
-    //     },
-    //     include: {
-    //       user: {
-    //         include: {
-    //           profile: true,
-    //           roles: true,
-    //         },
-    //       },
-    //     },
-    //   })) as any;
-    //   return newSession;
-    // },
   },
   providers: [
     Auth0Provider({

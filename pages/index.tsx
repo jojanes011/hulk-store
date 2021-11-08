@@ -3,99 +3,94 @@ import matchRoles from 'utils/matchRoles';
 import safeJsonStringify from 'safe-json-stringify';
 import prisma from 'config/prisma';
 import CardProduct from '@components/cards/CardProduct';
+import Categories from '@components/Categories';
+import { useState } from 'react';
+import downloadUrl from 'utils/accessAWS';
+// import Pagination from '@components/Pagination';
 
 export async function getServerSideProps(context) {
   const { rejected, isPublic, name } = await matchRoles(context);
   const categories = await prisma.category.findMany();
-  const products = await prisma.product.findMany({
+  const productsBD = await prisma.product.findMany({
     include: {
-      Category: true,
+      category: true,
     },
   });
+  const products = await Promise.all(
+    productsBD.map(async (product) => ({
+      ...product,
+      // imagePath: await downloadUrl(product.imagePath, 'image'),
+      imagePath: await downloadUrl(),
+    }))
+  );
+
   return {
     props: {
       rejected,
       isPublic,
       name,
       categories: JSON.parse(safeJsonStringify(categories)),
-      products: JSON.parse(safeJsonStringify(products)),
+      productsDB: JSON.parse(safeJsonStringify(products)),
     },
   };
 }
 
-const Home = ({ categories = [], products = [] }) => (
-  <div className='flex flex-col space-y-4'>
-    <div className='bg-background bg-contain flex flex-col md:flex-row space-y-4 md:space-x-4 padding-screen py-8'>
-      <CardPromotion
-        classNameCard='w-full sm:w-1/2 lg:w-2/3 bg-black text-white'
-        classNameButton='bg-white text-black'
-        title='Camiseta de Capitán America'
-        description='Tela en algodón, todas las tallas a precio de costo. No dejes pasar esta oferta.'
-      />
-      <CardPromotion
-        classNameCard='w-full sm:w-1/2 lg:w-1/3 bg-primary'
-        classNameButton='bg-black text-white'
-        title='Camiseta de Capitán America'
-        description='Tela en algodón, todas las tallas a precio de costo.'
-      />
-    </div>
-    <div className='flex flex-col space-y-4 padding-screen'>
-      <div>
-        <h1 className='uppercase font-semibold text-2xl'>Productos</h1>
+const Home = ({ categories = [], productsDB = [] }) => {
+  const [products, setProducts] = useState(productsDB);
+
+  const handleFilter = (category) => {
+    if (category === 'Todas') {
+      setProducts(productsDB);
+      return;
+    }
+    const filter = productsDB.filter(
+      (product) => product?.category?.name === category
+    );
+    setProducts(filter);
+  };
+
+  return (
+    <div className='flex flex-col space-y-4'>
+      <div className='bg-background bg-contain flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 padding-screen py-8'>
+        <CardPromotion
+          classNameCard='w-full sm:w-1/2 lg:w-2/3 bg-black text-white'
+          classNameButton='bg-white text-black'
+          title='Camiseta de Capitán America'
+          description='Tela en algodón, todas las tallas a precio de costo. No dejes pasar esta oferta.'
+        />
+        <CardPromotion
+          classNameCard='w-full sm:w-1/2 lg:w-1/3 bg-primary'
+          classNameButton='bg-black text-white'
+          title='Camiseta de Capitán America'
+          description='Tela en algodón, todas las tallas a precio de costo.'
+        />
       </div>
-      <div className='flex flex-row items-center justify-between'>
-        <div className='hidden md:flex flex-row items-center space-x-4'>
-          <button type='button' className='text-primary'>
-            Todas
-          </button>
-          <span>|</span>
-          {categories.map((category) => (
-            <>
-              <button type='button' className='font-light'>
-                {category?.name}
-              </button>
-              <span>|</span>
-            </>
-          ))}
-        </div>
-        <div className='flex md:hidden'>
-          <select name='select' className='py-2 px-4 border border-black'>
-            <option value='Todas' selected>
-              Todas
-            </option>
-            {categories.map((category) => (
-              <option value={category?.name}>{category?.name}</option>
-            ))}
-          </select>
-        </div>
+      <div className='flex flex-col space-y-4 padding-screen'>
         <div>
-          <button
-            type='button'
-            className='h-8 w-8 text-text hover:text-black border border-text hover:border-black'
-          >
-            <i className='fas fa-chevron-left text-sm ' />
-          </button>
-          <button
-            type='button'
-            className='h-8 w-8 text-text hover:text-black border border-text hover:border-black'
-          >
-            <i className='fas fa-chevron-right text-sm ' />
-          </button>
+          <h1 className='uppercase font-semibold text-2xl'>Productos</h1>
+        </div>
+        <div className='flex flex-row items-center justify-between'>
+          <Categories categories={categories} onFilter={handleFilter} />
+          {/* <Pagination onPaginateItems={setProducts} items={products} /> */}
+        </div>
+        <div className='border border-t-4 border-black h-px' />
+        <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-12'>
+          {products.length > 0 ? (
+            products.map((product) => (
+              <CardProduct product={product} key={product?.id} />
+            ))
+          ) : (
+            <div className='flex flex-col space-y-8 items-center col-span-full text-tertiary'>
+              <span className='text-4xl font-bold text-center w-full md:w-1/2'>
+                Ups! No hay ningún articulo para mostrar
+              </span>
+              <i className='fas fa-box-open text-8xl' />
+            </div>
+          )}
         </div>
       </div>
-      <div className='border border-t-4 border-black h-px' />
-      <div className='grid sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-12'>
-        {products.map((product) => (
-          <CardProduct
-            name={product?.name}
-            price={product?.price}
-            image={product?.imagePath}
-            key={product?.id}
-          />
-        ))}
-      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default Home;

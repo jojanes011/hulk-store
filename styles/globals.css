@@ -3,6 +3,27 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  min-height: 100%;
+  position: relative;
+}
+
 .padding-screen {
   @apply px-4 lg:px-16 xl:px-40;
+}
+
+.btn-create {
+  @apply flex flex-row justify-center items-center space-x-2 p-2 bg-tertiary rounded-md text-white font-semibold hover:bg-black;
+}
+
+.btn-save {
+  @apply w-full bg-tertiary text-white border rounded-lg p-2 font-semibold;
+}
+
+.btn-cancel {
+  @apply w-full bg-white text-black border border-black rounded-lg p-2 font-semibold;
+}
+
+.input-form {
+  @apply block w-full px-4 py-2 mt-2 text-black bg-white border border-black rounded-md focus:border-primary focus:outline-none focus:ring
 }
