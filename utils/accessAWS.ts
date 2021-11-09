@@ -7,26 +7,27 @@ aws.config.update({
   signatureVersion: 'v4',
 });
 
-const downloadUrl = async () => null;
+// const downloadUrl = async () => null;
+const s3 = new aws.S3();
 
-// const downloadUrl = async (file, type = 'image') => {
-//   let key = null;
-//   if (file !== null) {
-//     key = file.split('.s3.amazonaws.com/')[1];
-//   }
-//   const newUrl: string =
-//     key != null
-//       ? await s3.getSignedUrl('getObject', {
-//           Bucket: process.env.BUCKET_NAME,
-//           Key: decodeURIComponent(key),
-//           Expires: 2000,
-//           ResponseContentType:
-//             type === 'image'
-//               ? 'image/x-png,image/gif,image/jpeg'
-//               : 'application/octet-stream',
-//         })
-//       : null;
-//   return newUrl as string;
-// };
+const downloadUrl = async (file, type = 'image') => {
+  let key = null;
+  if (file !== null) {
+    key = file.split('.s3.amazonaws.com/')[1];
+  }
+  const newUrl: string =
+    key != null
+      ? await s3.getSignedUrl('getObject', {
+          Bucket: process.env.BUCKET_NAME,
+          Key: decodeURIComponent(key),
+          Expires: 2000,
+          ResponseContentType:
+            type === 'image'
+              ? 'image/x-png,image/gif,image/jpeg'
+              : 'application/octet-stream',
+        })
+      : null;
+  return newUrl as string;
+};
 
 export default downloadUrl;

@@ -32,6 +32,11 @@ const Navbar = () => {
     setAnchorElUser(null);
   };
 
+  const getTotal = (): number => {
+    const total = cartState.reduce((prev, curr) => prev + curr.price, 0);
+    return total;
+  };
+
   return (
     <div className='flex flex-row py-4 padding-screen space-x-4 justify-center md:justify-between items-center border-b'>
       <button
@@ -104,7 +109,9 @@ const Navbar = () => {
         </button>
         <div className='md:flex md:flex-col hidden'>
           <span className='font-semibold text-text'>Tu carrito</span>
-          <span className='font-bold'>$30.000</span>
+          <span className='font-bold'>
+            $ {new Intl.NumberFormat('de-DE').format(getTotal())}
+          </span>
         </div>
       </div>
     </div>

@@ -15,7 +15,8 @@
     "lint": "eslint components/** utils/** pages/** hooks/**",
     "lint:fix": "eslint --fix components/** utils/** pages/** hooks/**",
     "prepare": "husky install",
-    "createPage": "ts-node --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\" createPage.ts"
+    "createPage": "ts-node --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\" createPage.ts",
+    "test": "test"
   },
   "dependencies": {
     "@apollo/client": "^3.4.16",
@@ -66,6 +67,7 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-typescript": "^0.14.0",
     "husky": "^7.0.4",
+    "jest": "^27.3.1",
     "lint": "^0.7.0",
     "next-purgecss": "^4.0.0",
     "postcss": "^8.3.11",

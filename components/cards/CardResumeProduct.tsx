@@ -20,7 +20,9 @@ const CardResumeProduct = ({
     <div className='flex flex-col sm:flex-row justify-between content-center items-center flex-wrap space-x-0 sm:space-x-4 space-y-4 sm:space-y-0 text-black hover:shadow-sm'>
       <div className='flex-none sm:w-28 sm:h-28 w-40 h-40 relative place-self-center rounded-md'>
         <Image
-          src={product?.imagePath ?? '/img/defaultImage.jpg'}
+          src={
+            product?.imagePath ? '/img/camiseta1.jpg' : '/img/defaultImage.jpg'
+          }
           alt={product.name}
           layout='fill'
           objectFit='cover'
@@ -34,6 +36,9 @@ const CardResumeProduct = ({
         </div>
         <div className='text-black font-semibold text-lg max-h-7'>
           c/u {cart.find((itemCart) => itemCart.id === product.id).price}
+        </div>
+        <div className='text-black font-semibold text-lg max-h-7'>
+          Stock: {product.stock}
         </div>
       </div>
       <div className='w-full sm:w-1/6 flex flex-row justify-between items-center rounded-xl h-8 border-2 border-gray-100 shadow-md text-xl bottom-0'>

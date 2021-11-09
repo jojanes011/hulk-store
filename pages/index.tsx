@@ -12,6 +12,13 @@ export async function getServerSideProps(context) {
   const { rejected, isPublic, name } = await matchRoles(context);
   const categories = await prisma.category.findMany();
   const productsBD = await prisma.product.findMany({
+    where: {
+      NOT: {
+        stock: {
+          equals: 0,
+        },
+      },
+    },
     include: {
       category: true,
     },
@@ -19,8 +26,8 @@ export async function getServerSideProps(context) {
   const products = await Promise.all(
     productsBD.map(async (product) => ({
       ...product,
-      // imagePath: await downloadUrl(product.imagePath, 'image'),
-      imagePath: await downloadUrl(),
+      imagePath: await downloadUrl(product.imagePath, 'image'),
+      // imagePath: await downloadUrl(),
     }))
   );
 

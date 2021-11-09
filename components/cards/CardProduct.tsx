@@ -20,7 +20,9 @@ const CardProduct = ({
     >
       <div className='relative h-44 w-full'>
         <Image
-          src={product?.imagePath ?? '/img/defaultImage.jpg'}
+          src={
+            product?.imagePath ? '/img/camiseta1.jpg' : '/img/defaultImage.jpg'
+          }
           layout='fill'
         />
       </div>

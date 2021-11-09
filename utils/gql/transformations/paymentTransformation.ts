@@ -10,6 +10,26 @@ const getOrderLines = (orders = []) => {
   return format;
 };
 
+const getQuantityProduct = (cartState) => {
+  const formatProducts = [];
+  cartState.forEach((product) => {
+    const indexExist = formatProducts.findIndex(
+      (formatProduct) => formatProduct.id === product.id
+    );
+    if (indexExist !== -1) {
+      const { price } = cartState.find((cart) => cart.id === product.id);
+      formatProducts[indexExist] = {
+        ...formatProducts[indexExist],
+        price,
+        quantity: formatProducts[indexExist].quantity + 1,
+      };
+    } else {
+      formatProducts.push({ ...product, quantity: 1 });
+    }
+  });
+  return getOrderLines(formatProducts);
+};
+
 const createPaymentTransformation = (
   formData: any,
   userId: any,
@@ -28,7 +48,7 @@ const createPaymentTransformation = (
         notes: formData?.notes,
         orderLines: {
           createMany: {
-            data: getOrderLines(cartState),
+            data: getQuantityProduct(cartState),
           },
         },
         user: {

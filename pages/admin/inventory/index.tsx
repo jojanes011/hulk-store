@@ -11,14 +11,21 @@ import { useToast } from 'context/toast';
 import { useMutation } from '@apollo/client';
 import { DELETE_PRODUCT } from 'utils/gql/mutations';
 import { useRouter } from 'next/router';
+import downloadUrl from 'utils/accessAWS';
 
 export async function getServerSideProps(context) {
   const { rejected, isPublic } = await matchRoles(context);
-  const products = await prisma.product.findMany({
+  const productsBD = await prisma.product.findMany({
     include: {
       category: true,
     },
   });
+  const products = await Promise.all(
+    productsBD.map(async (product) => ({
+      ...product,
+      imagePath: await downloadUrl(product.imagePath, 'image'),
+    }))
+  );
   const categories = await prisma.category.findMany();
 
   return {

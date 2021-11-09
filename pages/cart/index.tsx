@@ -1,20 +1,29 @@
 import CardResumeProduct from '@components/cards/CardResumeProduct';
+import prisma from 'config/prisma';
 import { CartContext } from 'context/cart';
+import { useToast } from 'context/toast';
 import { useRouter } from 'next/router';
 import { useContext, useMemo, useState } from 'react';
 import matchRoles from 'utils/matchRoles';
 
 export async function getServerSideProps(context) {
   const { rejected, isPublic } = await matchRoles(context);
+  const productsStock = await prisma.product.findMany({
+    select: {
+      id: true,
+      stock: true,
+    },
+  });
   return {
-    props: { rejected, isPublic },
+    props: { rejected, isPublic, productsStock },
   };
 }
-const Cart = () => {
+const Cart = ({ productsStock }) => {
   const { cartState, addToCart, removeFromCart, removeAllFromCart } =
     useContext(CartContext);
   const [products, setProducts] = useState([]);
   const router = useRouter();
+  const { setToastState }: any = useToast();
 
   const getTotal = (): number => {
     const total = cartState.reduce((prev, curr) => prev + curr.price, 0);
@@ -39,6 +48,28 @@ const Cart = () => {
       }
     });
     setProducts(formatProducts);
+  };
+
+  const validateStock = () => {
+    const error = products.map((product) => {
+      const validateProduct = productsStock.find(
+        (productStock) => productStock.id === product.id
+      );
+      if (validateProduct) {
+        if (validateProduct.stock < product.quantity) {
+          return true;
+        }
+      }
+      return false;
+    });
+    if (error.includes(true)) {
+      setToastState({
+        message: 'Hay un artículo el cual no tenemos existencias.',
+        type: 'error',
+      });
+    } else {
+      router.push('/cart/confirm');
+    }
   };
 
   useMemo(() => getQuantityProduct(), [cartState]);
@@ -86,9 +117,7 @@ const Cart = () => {
             <button
               type='button'
               className='btn-save text-sm uppercase'
-              onClick={() => {
-                router.push('/cart/confirm');
-              }}
+              onClick={validateStock}
               disabled={products.length === 0}
             >
               finalizar pedido

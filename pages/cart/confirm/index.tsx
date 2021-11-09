@@ -7,7 +7,7 @@ import useFormData from 'hooks/useFormData';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useContext, useState } from 'react';
-import { CREATE_PAYMENT } from 'utils/gql/mutations';
+import { CREATE_PAYMENT, UPDATE_PRODUCT } from 'utils/gql/mutations';
 import createPaymentTransformation from 'utils/gql/transformations/paymentTransformation';
 import matchRoles from 'utils/matchRoles';
 
@@ -31,6 +31,7 @@ const Confirm = () => {
   const { form, formData, updateFormData } = useFormData(null);
   const { setToastState }: any = useToast();
   const [mutationCreatePayment] = useMutation(CREATE_PAYMENT);
+  const [mutationUpdateProduct] = useMutation(UPDATE_PRODUCT);
 
   const getTotal = (): number => {
     const total = cartState.reduce((prev, curr) => prev + curr.price, 0);
@@ -60,13 +61,7 @@ const Confirm = () => {
       variables: { data: format },
     })
       .then(() => {
-        setToastState({
-          message: '¡Compra realizada con Éxito!',
-          type: 'success',
-        });
-        handleOpenLoading(false);
-        deleteCart();
-        router.push('/');
+        updateStocks(format);
       })
       .catch(() => {
         setToastState({
@@ -75,6 +70,42 @@ const Confirm = () => {
         });
         handleOpenLoading(false);
       });
+  };
+
+  const updateStocks = (products) => {
+    products.orders.create.orderLines.createMany.data.forEach(
+      async (product) => {
+        await mutationUpdateProduct({
+          variables: {
+            data: {
+              stock: {
+                decrement: product.amount,
+              },
+            },
+            where: {
+              id: product.productId,
+            },
+          },
+        })
+          .then(() => {
+            setToastState({
+              message: '¡Compra realizada con Éxito!',
+              type: 'success',
+            });
+            handleOpenLoading(false);
+            deleteCart();
+            router.push('/');
+          })
+          .catch(() => {
+            setToastState({
+              message:
+                'Hubo un error. Por favor, vuelve a intentarlo más tarde.',
+              type: 'error',
+            });
+            handleOpenLoading(false);
+          });
+      }
+    );
   };
 
   return (
