@@ -1,1 +1,1 @@
-# hulk-store
+# Hulk Store
