@@ -45,6 +45,10 @@ const CardInventory = ({
           <span>{item?.category?.name}</span>
         </div>
         <div className='flex flex-col w-full'>
+          <span className='text-primary font-semibold'>Stock</span>
+          <span>{item?.stock}</span>
+        </div>
+        <div className='flex flex-col w-full'>
           <span className='text-primary font-semibold'>Editar</span>
 
           <Tooltip title='Editar'>

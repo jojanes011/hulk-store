@@ -2,31 +2,31 @@ const pages = [
   {
     name: 'Inicio',
     route: '/',
-    roles: ['admin', 'customer'],
+    roles: [],
     isPublic: true,
   },
   {
     name: 'Perfil',
     route: '/profile',
-    roles: ['admin', 'customer'],
+    roles: [],
     isPublic: false,
   },
   {
     name: 'Carrito',
     route: '/cart',
-    roles: ['admin', 'customer'],
+    roles: [],
     isPublic: false,
   },
   {
     name: 'Confirmar compra',
     route: '/cart/confirm',
-    roles: ['admin', 'customer'],
+    roles: [],
     isPublic: false,
   },
   {
     name: 'Compra',
     route: '/cart/confirm/[id]',
-    roles: ['admin', 'customer'],
+    roles: [],
     isPublic: false,
   },
   {

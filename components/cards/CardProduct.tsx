@@ -16,7 +16,7 @@ const CardProduct = ({
 
   return (
     <div
-      className={`${classNameCard} flex flex-col filter drop-shadow-lg bg-white border border-opacity-70 rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110`}
+      className={`${classNameCard} flex flex-col filter drop-shadow-lg justify-between bg-white border border-opacity-70 rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110`}
     >
       <div className='relative h-44 w-full'>
         <Image

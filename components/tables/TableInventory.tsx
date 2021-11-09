@@ -22,6 +22,7 @@ const TableInventory = ({
           <th className='py-2 px-3 text-center text-primary'>Descripción</th>
           <th className='py-2 px-3 text-center text-primary'>Precio</th>
           <th className='py-2 px-3 text-center text-primary'>Categoria</th>
+          <th className='py-2 px-3 text-center text-primary'>Stock</th>
           <th className='py-2 px-3 text-center text-primary'>Acciones</th>
         </tr>
       </thead>
@@ -44,6 +45,7 @@ const TableInventory = ({
               />
             </td>
             <td className='py-1 px-3 text-center'>{item?.category?.name}</td>
+            <td className='py-1 px-3 text-center'>{item?.stock}</td>
             <td className='py-1 px-3 text-center flex flex-row space-x-2 justify-center'>
               <Tooltip title='Editar'>
                 <button

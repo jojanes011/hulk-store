@@ -62,14 +62,18 @@ const Home = ({ categories = [], productsDB = [] }) => {
         <CardPromotion
           classNameCard='w-full sm:w-1/2 lg:w-2/3 bg-black text-white'
           classNameButton='bg-white text-black'
-          title='Camiseta de Capitán America'
-          description='Tela en algodón, todas las tallas a precio de costo. No dejes pasar esta oferta.'
+          title={products.length > 0 ? products[0].name : 'No hay artículos'}
+          description={
+            products.length > 0 ? products[0].description : 'No hay descripción'
+          }
         />
         <CardPromotion
           classNameCard='w-full sm:w-1/2 lg:w-1/3 bg-primary'
           classNameButton='bg-black text-white'
-          title='Camiseta de Capitán America'
-          description='Tela en algodón, todas las tallas a precio de costo.'
+          title={products.length > 1 ? products[1].name : 'No hay artículos'}
+          description={
+            products.length > 1 ? products[1].description : 'No hay descripción'
+          }
         />
       </div>
       <div className='flex flex-col space-y-4 padding-screen'>
@@ -78,10 +82,9 @@ const Home = ({ categories = [], productsDB = [] }) => {
         </div>
         <div className='flex flex-row items-center justify-between'>
           <Categories categories={categories} onFilter={handleFilter} />
-          {/* <Pagination onPaginateItems={setProducts} items={products} /> */}
         </div>
         <div className='border border-t-4 border-black h-px' />
-        <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-12'>
+        <div className='grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-12'>
           {products.length > 0 ? (
             products.map((product) => (
               <CardProduct product={product} key={product?.id} />
