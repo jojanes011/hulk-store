@@ -20,7 +20,6 @@ export const createProductTransformation = (formData: any) => {
 };
 
 export const updateProductTransformation = (formData: any) => {
-  console.log(`formData`, formData);
   const format = {
     name: {
       set: formData?.name,
