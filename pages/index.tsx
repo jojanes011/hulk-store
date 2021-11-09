@@ -5,7 +5,7 @@ import prisma from 'config/prisma';
 import CardProduct from '@components/cards/CardProduct';
 import Categories from '@components/Categories';
 import { useState } from 'react';
-// import Pagination from '@components/Pagination';
+import Fade from 'react-reveal/Fade';
 
 export async function getServerSideProps(context) {
   const { rejected, isPublic, name } = await matchRoles(context);
@@ -76,20 +76,22 @@ const Home = ({ categories = [], productsDB = [] }) => {
           <Categories categories={categories} onFilter={handleFilter} />
         </div>
         <div className='border border-t-4 border-black h-px' />
-        <div className='grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-12'>
-          {products.length > 0 ? (
-            products.map((product) => (
-              <CardProduct product={product} key={product?.id} />
-            ))
-          ) : (
-            <div className='flex flex-col space-y-8 items-center col-span-full text-tertiary'>
-              <span className='text-xl md:text-4xl font-bold text-center w-full md:w-1/2'>
-                Ups! No hay ningún articulo para mostrar
-              </span>
-              <i className='fas fa-box-open text-8xl' />
-            </div>
-          )}
-        </div>
+        <Fade left>
+          <div className='grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-12'>
+            {products.length > 0 ? (
+              products.map((product) => (
+                <CardProduct product={product} key={product?.id} />
+              ))
+            ) : (
+              <div className='flex flex-col space-y-8 items-center col-span-full text-tertiary'>
+                <span className='text-xl md:text-4xl font-bold text-center w-full md:w-1/2'>
+                  Ups! No hay ningún articulo para mostrar
+                </span>
+                <i className='fas fa-box-open text-8xl' />
+              </div>
+            )}
+          </div>
+        </Fade>
       </div>
     </div>
   );
