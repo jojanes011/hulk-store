@@ -11,21 +11,14 @@ import { useToast } from 'context/toast';
 import { useMutation } from '@apollo/client';
 import { DELETE_PRODUCT } from 'utils/gql/mutations';
 import { useRouter } from 'next/router';
-import downloadUrl from 'utils/accessAWS';
 
 export async function getServerSideProps(context) {
   const { rejected, isPublic } = await matchRoles(context);
-  const productsBD = await prisma.product.findMany({
+  const products = await prisma.product.findMany({
     include: {
       category: true,
     },
   });
-  const products = await Promise.all(
-    productsBD.map(async (product) => ({
-      ...product,
-      imagePath: await downloadUrl(product.imagePath, 'image'),
-    }))
-  );
   const categories = await prisma.category.findMany();
 
   return {
@@ -92,16 +85,27 @@ const Inventory = ({ products = [], categories = [] }) => {
         </button>
       </div>
       <div>
-        <TableInventory
-          onDeleteItem={handleDelete}
-          items={products}
-          onOpenModalForm={handleOpenModalForm}
-        />
-        <CardInventory
-          onDeleteItem={handleDelete}
-          items={products}
-          onOpenModalForm={handleOpenModalForm}
-        />
+        {products.length > 0 ? (
+          <>
+            <TableInventory
+              onDeleteItem={handleDelete}
+              items={products}
+              onOpenModalForm={handleOpenModalForm}
+            />
+            <CardInventory
+              onDeleteItem={handleDelete}
+              items={products}
+              onOpenModalForm={handleOpenModalForm}
+            />
+          </>
+        ) : (
+          <div className='flex flex-col space-y-8 items-center col-span-full text-tertiary'>
+            <span className='text-4xl font-bold text-center w-full md:w-1/2'>
+              Ups! No hay ningún producto para mostrar
+            </span>
+            <i className='fas fa-box-open text-8xl' />
+          </div>
+        )}
       </div>
       {openModalForm && (
         <ModalFormProduct

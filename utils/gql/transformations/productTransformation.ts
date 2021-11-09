@@ -4,7 +4,7 @@ export const createProductTransformation = (formData: any) => {
     description: formData?.description,
     stock: parseFloat(formData?.stock),
     price: parseFloat(formData?.price),
-    imagePath: formData?.imagePath,
+    imagePath: formData?.imagePath.name === '' ? null : formData?.imagePath,
     category: {
       connectOrCreate: {
         create: {
@@ -20,6 +20,7 @@ export const createProductTransformation = (formData: any) => {
 };
 
 export const updateProductTransformation = (formData: any) => {
+  console.log(`formData`, formData);
   const format = {
     name: {
       set: formData?.name,
@@ -34,7 +35,7 @@ export const updateProductTransformation = (formData: any) => {
       set: parseFloat(formData?.price),
     },
     imagePath: {
-      set: formData?.imagePath,
+      set: formData?.imagePath.name === '' ? null : formData?.imagePath,
     },
     category: {
       connectOrCreate: {

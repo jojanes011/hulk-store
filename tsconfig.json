@@ -32,7 +32,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "createPage.ts"  ],
+, "createPage.ts", "next.config.js"  ],
   "exclude": [
     "node_modules"
   ]

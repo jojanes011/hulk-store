@@ -118,11 +118,7 @@ const ModalFormProduct = ({
             {Object.keys(product).length > 0 && (
               <div className='relative h-36 w-24'>
                 <Image
-                  src={
-                    product?.imagePath
-                      ? '/img/camiseta1.jpg'
-                      : '/img/defaultImage.jpg'
-                  }
+                  src={product?.imagePath ?? '/img/defaultImage.jpg'}
                   layout='fill'
                 />
               </div>

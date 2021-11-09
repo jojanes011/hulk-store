@@ -5,13 +5,12 @@ import prisma from 'config/prisma';
 import CardProduct from '@components/cards/CardProduct';
 import Categories from '@components/Categories';
 import { useState } from 'react';
-import downloadUrl from 'utils/accessAWS';
 // import Pagination from '@components/Pagination';
 
 export async function getServerSideProps(context) {
   const { rejected, isPublic, name } = await matchRoles(context);
   const categories = await prisma.category.findMany();
-  const productsBD = await prisma.product.findMany({
+  const products = await prisma.product.findMany({
     where: {
       NOT: {
         stock: {
@@ -23,13 +22,6 @@ export async function getServerSideProps(context) {
       category: true,
     },
   });
-  const products = await Promise.all(
-    productsBD.map(async (product) => ({
-      ...product,
-      imagePath: await downloadUrl(product.imagePath, 'image'),
-      // imagePath: await downloadUrl(),
-    }))
-  );
 
   return {
     props: {
@@ -91,7 +83,7 @@ const Home = ({ categories = [], productsDB = [] }) => {
             ))
           ) : (
             <div className='flex flex-col space-y-8 items-center col-span-full text-tertiary'>
-              <span className='text-4xl font-bold text-center w-full md:w-1/2'>
+              <span className='text-xl md:text-4xl font-bold text-center w-full md:w-1/2'>
                 Ups! No hay ningún articulo para mostrar
               </span>
               <i className='fas fa-box-open text-8xl' />
